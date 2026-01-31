@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   BarChart3, 
   ArrowLeft, 
@@ -10,10 +10,15 @@ import {
   Video, 
   FileText,
   ChevronRight,
+  ChevronDown,
   Send,
   Bot,
   User,
-  Loader2
+  Loader2,
+  Play,
+  Settings,
+  Download,
+  Share2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,25 +28,70 @@ const categories = [
     icon: Book,
     title: "Getting Started",
     description: "Learn the basics of ConsultDeck",
-    articles: 8,
+    articles: [
+      { title: "Welcome to ConsultDeck", icon: Book, readTime: "3 min" },
+      { title: "Setting up your account", icon: Settings, readTime: "5 min" },
+      { title: "Understanding the dashboard", icon: BarChart3, readTime: "4 min" },
+      { title: "Your first pitch deck", icon: FileText, readTime: "6 min" },
+      { title: "Navigating the interface", icon: Book, readTime: "3 min" },
+      { title: "Account settings & preferences", icon: Settings, readTime: "4 min" },
+      { title: "Keyboard shortcuts guide", icon: Book, readTime: "2 min" },
+      { title: "Mobile app overview", icon: Book, readTime: "5 min" },
+    ],
   },
   {
     icon: FileText,
     title: "Creating Pitches",
     description: "Master the pitch creation workflow",
-    articles: 12,
+    articles: [
+      { title: "How to upload property data", icon: FileText, readTime: "5 min" },
+      { title: "Supported file formats (CSV, Excel, PDF)", icon: Download, readTime: "3 min" },
+      { title: "Manual data entry guide", icon: FileText, readTime: "4 min" },
+      { title: "Using AI to generate insights", icon: Bot, readTime: "6 min" },
+      { title: "Customizing pitch templates", icon: Settings, readTime: "5 min" },
+      { title: "Adding charts and visualizations", icon: BarChart3, readTime: "7 min" },
+      { title: "Including market comparables", icon: FileText, readTime: "5 min" },
+      { title: "Financial projections explained", icon: BarChart3, readTime: "8 min" },
+      { title: "Risk assessment features", icon: FileText, readTime: "6 min" },
+      { title: "Editing and revising pitches", icon: FileText, readTime: "4 min" },
+      { title: "Version history & rollback", icon: FileText, readTime: "3 min" },
+      { title: "Pitch deck best practices", icon: Book, readTime: "10 min" },
+    ],
   },
   {
     icon: Video,
     title: "Video Tutorials",
     description: "Step-by-step visual guides",
-    articles: 6,
+    articles: [
+      { title: "Quick start video walkthrough", icon: Play, readTime: "8 min" },
+      { title: "Advanced features deep dive", icon: Play, readTime: "15 min" },
+      { title: "Data import tutorial", icon: Play, readTime: "6 min" },
+      { title: "Template customization demo", icon: Play, readTime: "10 min" },
+      { title: "Collaboration features tour", icon: Play, readTime: "7 min" },
+      { title: "Export options explained", icon: Play, readTime: "5 min" },
+    ],
   },
   {
     icon: MessageCircle,
     title: "FAQ",
     description: "Common questions answered",
-    articles: 15,
+    articles: [
+      { title: "What file formats are supported?", icon: MessageCircle, readTime: "2 min" },
+      { title: "How secure is my data?", icon: MessageCircle, readTime: "3 min" },
+      { title: "Can I collaborate with my team?", icon: Share2, readTime: "3 min" },
+      { title: "What's included in each plan?", icon: MessageCircle, readTime: "4 min" },
+      { title: "How do I export to PowerPoint?", icon: Download, readTime: "2 min" },
+      { title: "Can I white-label my pitches?", icon: MessageCircle, readTime: "3 min" },
+      { title: "How does AI analysis work?", icon: Bot, readTime: "5 min" },
+      { title: "What markets are covered?", icon: MessageCircle, readTime: "3 min" },
+      { title: "How do I share with clients?", icon: Share2, readTime: "2 min" },
+      { title: "Troubleshooting upload issues", icon: MessageCircle, readTime: "4 min" },
+      { title: "Browser compatibility", icon: MessageCircle, readTime: "2 min" },
+      { title: "Billing and subscription FAQ", icon: MessageCircle, readTime: "5 min" },
+      { title: "Data retention policies", icon: MessageCircle, readTime: "3 min" },
+      { title: "API access and integrations", icon: Settings, readTime: "6 min" },
+      { title: "Contact support", icon: MessageCircle, readTime: "1 min" },
+    ],
   },
 ];
 
@@ -56,6 +106,7 @@ const popularArticles = [
 
 const HelpCenter = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string }[]>([
     { 
       role: "assistant", 
@@ -64,6 +115,10 @@ const HelpCenter = () => {
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const toggleCategory = (title: string) => {
+    setExpandedCategory(expandedCategory === title ? null : title);
+  };
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -160,23 +215,63 @@ const HelpCenter = () => {
               transition={{ delay: 0.1 }}
             >
               <h2 className="font-display text-xl font-semibold text-foreground mb-4">Browse by Category</h2>
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-4">
                 {categories.map((category, index) => (
                   <div
                     key={index}
-                    className="p-5 rounded-xl bg-card border border-border hover:border-accent/30 hover:shadow-card transition-all cursor-pointer group"
+                    className="rounded-xl bg-card border border-border overflow-hidden"
                   >
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                        <category.icon className="w-6 h-6 text-primary" />
+                    <div
+                      onClick={() => toggleCategory(category.title)}
+                      className="p-5 hover:bg-muted/30 transition-all cursor-pointer group"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                          <category.icon className="w-6 h-6 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-medium text-foreground mb-1">{category.title}</h3>
+                          <p className="text-sm text-muted-foreground mb-2">{category.description}</p>
+                          <span className="text-xs text-accent">{category.articles.length} articles</span>
+                        </div>
+                        <motion.div
+                          animate={{ rotate: expandedCategory === category.title ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <ChevronDown className="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors" />
+                        </motion.div>
                       </div>
-                      <div className="flex-1">
-                        <h3 className="font-medium text-foreground mb-1">{category.title}</h3>
-                        <p className="text-sm text-muted-foreground mb-2">{category.description}</p>
-                        <span className="text-xs text-accent">{category.articles} articles</span>
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors" />
                     </div>
+                    
+                    <AnimatePresence>
+                      {expandedCategory === category.title && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="border-t border-border divide-y divide-border">
+                            {category.articles.map((article, articleIndex) => (
+                              <div
+                                key={articleIndex}
+                                className="px-5 py-3 hover:bg-muted/50 transition-colors cursor-pointer flex items-center justify-between group/article"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <article.icon className="w-4 h-4 text-muted-foreground" />
+                                  <span className="text-sm text-foreground">{article.title}</span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                  <span className="text-xs text-muted-foreground">{article.readTime}</span>
+                                  <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover/article:opacity-100 transition-opacity" />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 ))}
               </div>
