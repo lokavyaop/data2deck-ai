@@ -137,12 +137,14 @@ const Explore = () => {
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
               </Link>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+              <Link to="/" className="flex items-center gap-2 group">
+                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center group-hover:shadow-glow transition-shadow">
                   <BarChart3 className="w-4 h-4 text-primary-foreground" />
                 </div>
-                <span className="font-display font-bold text-foreground">Explore Community</span>
-              </div>
+                <span className="font-display font-bold text-foreground">
+                  Consult<span className="text-accent">Deck</span>
+                </span>
+              </Link>
             </div>
           </div>
         </div>

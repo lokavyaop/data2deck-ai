@@ -119,32 +119,35 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mt-16 max-w-4xl mx-auto"
         >
-          <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10">
-            <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl p-1">
-              <div className="bg-secondary/80 rounded-xl overflow-hidden">
-                {/* Browser Chrome */}
-                <div className="flex items-center gap-2 px-4 py-3 bg-black/20">
-                  <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                    <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                  </div>
-                  <div className="flex-1 text-center">
-                    <div className="inline-block px-4 py-1 rounded-md bg-white/10 text-white/60 text-xs">
-                      app.consultdeck.ai/dashboard
+          <Link to="/dashboard" className="block group">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 group-hover:border-accent/30 transition-all duration-300 group-hover:shadow-glow">
+              <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl p-1">
+                <div className="bg-secondary/80 rounded-xl overflow-hidden">
+                  {/* Browser Chrome */}
+                  <div className="flex items-center gap-2 px-4 py-3 bg-black/20">
+                    <div className="flex gap-2">
+                      <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                      <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                      <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                    </div>
+                    <div className="flex-1 text-center">
+                      <div className="inline-block px-4 py-1 rounded-md bg-white/10 text-white/60 text-xs group-hover:text-accent transition-colors">
+                        app.consultdeck.ai/dashboard
+                      </div>
                     </div>
                   </div>
-                </div>
-                {/* Preview Content */}
-                <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
-                  <div className="text-center text-white/40">
-                    <BarChartPreview />
-                    <p className="mt-4 text-sm">Interactive Dashboard Preview</p>
+                  {/* Preview Content */}
+                  <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center relative">
+                    <div className="text-center text-white/40 group-hover:text-white/60 transition-colors">
+                      <BarChartPreview />
+                      <p className="mt-4 text-sm">Click to view Dashboard</p>
+                    </div>
+                    <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors" />
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         </motion.div>
       </div>
 
