@@ -40,7 +40,7 @@ const mockPitches = [
     status: "completed",
     views: 156,
     createdAt: "2024-01-15",
-    thumbnail: "manhattan",
+    imagePrompt: "Luxurious modern Manhattan high-rise condominium building with glass facade, aerial view of New York City skyline at golden hour, ultra realistic architectural visualization",
   },
   {
     id: "2",
@@ -50,7 +50,7 @@ const mockPitches = [
     status: "in_progress",
     views: 89,
     createdAt: "2024-01-18",
-    thumbnail: "miami",
+    imagePrompt: "Stunning beachfront luxury resort hotel in Miami Beach with palm trees, art deco style architecture, turquoise ocean water, sunny day, professional real estate photography",
   },
   {
     id: "3",
@@ -60,7 +60,7 @@ const mockPitches = [
     status: "completed",
     views: 234,
     createdAt: "2024-01-20",
-    thumbnail: "sf",
+    imagePrompt: "Modern tech company campus building in San Francisco with sustainable design, glass and steel architecture, green rooftop garden, Bay Bridge visible in background",
   },
 ];
 
@@ -95,6 +95,40 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [pitchImages, setPitchImages] = useState<Record<string, string>>({});
+  const [loadingImages, setLoadingImages] = useState<Record<string, boolean>>({});
+
+  // Generate AI images for pitch decks
+  const generatePitchImage = async (pitchId: string, prompt: string) => {
+    if (pitchImages[pitchId] || loadingImages[pitchId]) return;
+    
+    setLoadingImages(prev => ({ ...prev, [pitchId]: true }));
+    
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-image`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ prompt, quality: "standard" }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to generate image");
+
+      const data = await response.json();
+      if (data.imageUrl) {
+        setPitchImages(prev => ({ ...prev, [pitchId]: data.imageUrl }));
+      }
+    } catch (error) {
+      console.error(`Failed to generate image for pitch ${pitchId}:`, error);
+    } finally {
+      setLoadingImages(prev => ({ ...prev, [pitchId]: false }));
+    }
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("consultdeck_user");
@@ -104,6 +138,15 @@ const Dashboard = () => {
       navigate("/login");
     }
   }, [navigate]);
+
+  // Generate images for all pitches on mount
+  useEffect(() => {
+    if (user) {
+      mockPitches.forEach(pitch => {
+        generatePitchImage(pitch.id, pitch.imagePrompt);
+      });
+    }
+  }, [user]);
 
   const handleLogout = () => {
     localStorage.removeItem("consultdeck_user");
@@ -285,10 +328,22 @@ const Dashboard = () => {
               >
                 <div className="rounded-xl bg-card border border-border overflow-hidden hover:shadow-card-hover hover:border-accent/30 transition-all">
                   {/* Thumbnail */}
-                  <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <BarChart3 className="w-12 h-12 text-primary/40" />
-                    </div>
+                  <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 relative overflow-hidden">
+                    {pitchImages[pitch.id] ? (
+                      <img 
+                        src={pitchImages[pitch.id]} 
+                        alt={pitch.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : loadingImages[pitch.id] ? (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      </div>
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <BarChart3 className="w-12 h-12 text-primary/40" />
+                      </div>
+                    )}
                     <div className="absolute top-3 right-3">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                         pitch.status === "completed" 
