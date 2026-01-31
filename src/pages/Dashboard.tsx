@@ -163,8 +163,8 @@ const Dashboard = () => {
         <div className="container-custom">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link to="/dashboard" className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center group-hover:shadow-glow transition-shadow">
                 <BarChart3 className="w-5 h-5 text-primary-foreground" />
               </div>
               <span className="font-display font-bold text-lg text-foreground">

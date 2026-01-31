@@ -37,13 +37,38 @@ const Footer = () => {
           <div>
             <h4 className="font-display font-semibold mb-4">Product</h4>
             <ul className="space-y-3">
-              {["Features", "How It Works", "Pricing", "API"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-background/60 hover:text-accent transition-colors text-sm">
-                    {item}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <a 
+                  href="#features" 
+                  onClick={(e) => { e.preventDefault(); document.querySelector("#features")?.scrollIntoView({ behavior: "smooth" }); }}
+                  className="text-background/60 hover:text-accent transition-colors text-sm cursor-pointer"
+                >
+                  Features
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="#how-it-works" 
+                  onClick={(e) => { e.preventDefault(); document.querySelector("#how-it-works")?.scrollIntoView({ behavior: "smooth" }); }}
+                  className="text-background/60 hover:text-accent transition-colors text-sm cursor-pointer"
+                >
+                  How It Works
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="#pricing" 
+                  onClick={(e) => { e.preventDefault(); document.querySelector("#pricing")?.scrollIntoView({ behavior: "smooth" }); }}
+                  className="text-background/60 hover:text-accent transition-colors text-sm cursor-pointer"
+                >
+                  Pricing
+                </a>
+              </li>
+              <li>
+                <Link to="/explore" className="text-background/60 hover:text-accent transition-colors text-sm">
+                  Explore
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -51,13 +76,26 @@ const Footer = () => {
           <div>
             <h4 className="font-display font-semibold mb-4">Support</h4>
             <ul className="space-y-3">
-              {["Help Center", "Documentation", "Contact Us", "Status"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-background/60 hover:text-accent transition-colors text-sm">
-                    {item}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <Link to="/help" className="text-background/60 hover:text-accent transition-colors text-sm">
+                  Help Center
+                </Link>
+              </li>
+              <li>
+                <Link to="/help" className="text-background/60 hover:text-accent transition-colors text-sm">
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <Link to="/help" className="text-background/60 hover:text-accent transition-colors text-sm">
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/dashboard" className="text-background/60 hover:text-accent transition-colors text-sm">
+                  Dashboard
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
