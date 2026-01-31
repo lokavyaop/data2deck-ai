@@ -83,6 +83,9 @@ const HeroSection = () => {
               variant="outline"
               size="lg"
               className="border-white/20 text-white hover:bg-white/10 px-8 py-6 text-lg"
+              onClick={() => {
+                document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" });
+              }}
             >
               <Play className="mr-2 w-5 h-5" />
               See How It Works
