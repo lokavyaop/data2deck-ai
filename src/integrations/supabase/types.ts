@@ -14,7 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      pitches: {
+        Row: {
+          address: string | null
+          asking_price: number | null
+          city: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          property_name: string | null
+          property_type: string | null
+          square_footage: number | null
+          state: string | null
+          status: string | null
+          title: string
+          updated_at: string
+          user_id: string
+          views: number | null
+          year_built: number | null
+        }
+        Insert: {
+          address?: string | null
+          asking_price?: number | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          property_name?: string | null
+          property_type?: string | null
+          square_footage?: number | null
+          state?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+          views?: number | null
+          year_built?: number | null
+        }
+        Update: {
+          address?: string | null
+          asking_price?: number | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          property_name?: string | null
+          property_type?: string | null
+          square_footage?: number | null
+          state?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          views?: number | null
+          year_built?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
