@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import DashboardPreview from "./DashboardPreview";
 
 const HeroSection = () => {
   return (
@@ -137,12 +138,12 @@ const HeroSection = () => {
                     </div>
                   </div>
                   {/* Preview Content */}
-                  <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center relative">
-                    <div className="text-center text-white/40 group-hover:text-white/60 transition-colors">
-                      <BarChartPreview />
-                      <p className="mt-4 text-sm">Click to view Dashboard</p>
+                  <div className="aspect-video relative overflow-hidden">
+                    <DashboardPreview />
+                    <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors pointer-events-none" />
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/60 backdrop-blur-sm rounded-full text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                      Click to explore dashboard →
                     </div>
-                    <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors" />
                   </div>
                 </div>
               </div>
@@ -156,15 +157,5 @@ const HeroSection = () => {
     </section>
   );
 };
-
-const BarChartPreview = () => (
-  <svg width="200" height="100" viewBox="0 0 200 100" className="mx-auto">
-    <rect x="10" y="60" width="25" height="40" fill="currentColor" opacity="0.3" rx="4" />
-    <rect x="45" y="40" width="25" height="60" fill="currentColor" opacity="0.4" rx="4" />
-    <rect x="80" y="20" width="25" height="80" fill="hsl(217 91% 60%)" rx="4" />
-    <rect x="115" y="35" width="25" height="65" fill="currentColor" opacity="0.4" rx="4" />
-    <rect x="150" y="50" width="25" height="50" fill="currentColor" opacity="0.3" rx="4" />
-  </svg>
-);
 
 export default HeroSection;
