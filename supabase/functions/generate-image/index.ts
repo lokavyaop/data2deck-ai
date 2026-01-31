@@ -69,14 +69,39 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    console.log("AI response received");
+    console.log("AI response structure:", JSON.stringify(data, null, 2));
 
-    const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
-    const textResponse = data.choices?.[0]?.message?.content;
+    // Try multiple paths to find the image
+    let imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    
+    // Also check for inline_data format
+    if (!imageUrl && data.choices?.[0]?.message?.images?.[0]?.inline_data) {
+      const inlineData = data.choices[0].message.images[0].inline_data;
+      imageUrl = `data:${inlineData.mime_type || 'image/png'};base64,${inlineData.data}`;
+    }
+
+    // Check content array format
+    if (!imageUrl && Array.isArray(data.choices?.[0]?.message?.content)) {
+      const imagePart = data.choices[0].message.content.find((part: any) => 
+        part.type === 'image_url' || part.image_url || part.inline_data
+      );
+      if (imagePart?.image_url?.url) {
+        imageUrl = imagePart.image_url.url;
+      } else if (imagePart?.inline_data) {
+        imageUrl = `data:${imagePart.inline_data.mime_type || 'image/png'};base64,${imagePart.inline_data.data}`;
+      }
+    }
+
+    const textResponse = typeof data.choices?.[0]?.message?.content === 'string' 
+      ? data.choices[0].message.content 
+      : "Image generated successfully";
 
     if (!imageUrl) {
-      throw new Error("No image generated");
+      console.error("Could not find image in response:", JSON.stringify(data));
+      throw new Error("No image found in AI response");
     }
+
+    console.log("Successfully extracted image URL (length:", imageUrl.length, ")");
 
     return new Response(
       JSON.stringify({ 
