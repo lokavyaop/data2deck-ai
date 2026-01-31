@@ -28,6 +28,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import AIImageGenerator from "@/components/AIImageGenerator";
 
 // Mock data for demonstration
 const mockPitches = [
@@ -143,6 +144,7 @@ const Dashboard = () => {
 
             {/* Right Actions */}
             <div className="flex items-center gap-3">
+              <AIImageGenerator />
               <Link to="/help">
                 <Button variant="ghost" size="icon" className="text-muted-foreground">
                   <HelpCircle className="w-5 h-5" />
